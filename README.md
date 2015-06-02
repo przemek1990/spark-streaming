@@ -10,7 +10,7 @@ Spark streaming is building using SBT
 ## Deploy 
 In SPARK_HOME directory
 
-    ./bin/spark-submit --class className --master MASTER_URL 
+    ./bin/spark-submit --class package.className --master MASTER_URL 
     PATH_TO_JAR/flume-streaming.jar [HOST] [PORT]
 
 
