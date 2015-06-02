@@ -15,6 +15,7 @@ object BasicStreaming {
 
     //print errorLines
     errorLines.print()
+    //save errorLines to files
     errorLines.saveAsTextFiles("/home/ec2-user/app//errors")
 
     //start streaming context
