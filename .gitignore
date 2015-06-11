@@ -19,3 +19,4 @@ project/plugins/project/
 
 #properties file
 /src/main/resource/
+src/main/resources/application.properties
