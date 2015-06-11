@@ -1,12 +1,11 @@
 # spark-streaming
 
-Spark streaming example in Scala
+Example how to integrate Apache Flume with Apache Spark using JSON data format. 
 
 # Buliding 
 Spark streaming is building using SBT
     
     sbt assemble
-    
     
 # Configuration 
 Create application.properties file in the resources dir with below configuration:
@@ -21,7 +20,7 @@ Create application.properties file in the resources dir with below configuration
 In SPARK_HOME directory
 
     ./bin/spark-submit --class package.className --master MASTER_URL 
-    PATH_TO_JAR/flume-streaming.jar [HOST] [PORT]
+    PATH_TO_JAR/spark-streaming.jar 
 
 
 
