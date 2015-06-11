@@ -1,8 +1,8 @@
 package no.ap.streaming.flume
 
 import com.typesafe.config.ConfigFactory
-import no.ap.streaming.event.RootEvent
-import no.ap.streaming.event.RootProtocol._
+import no.ap.streaming.event.ActivityStreamEvent
+import no.ap.streaming.event.ActivityStreamProtocol._
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.flume.FlumeUtils
 import org.apache.spark.streaming.{Milliseconds, StreamingContext}
@@ -26,7 +26,7 @@ object FlumeStreaming {
     events.count().map(cnt => "Received " + cnt + " flume events.").print()
 
     events.flatMap(event => {
-      new String(event.event.getBody().array(), "UTF-8").parseJson.convertTo[List[RootEvent]]
+      new String(event.event.getBody().array(), "UTF-8").parseJson.convertTo[List[ActivityStreamEvent]]
     }).map(rootEvent => (rootEvent.eventType, 1)).reduceByKey((x, y) => x + y).print()
 
     ssc.start()
