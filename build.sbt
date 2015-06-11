@@ -13,5 +13,7 @@ assemblyMergeStrategy in assembly := {
 
 libraryDependencies ++= Seq(
   "org.apache.spark" % "spark-streaming-flume_2.10" % "1.3.1",
+  "io.spray" %% "spray-json" % "1.3.2",
+  "com.typesafe" % "config" % "1.3.0",
   "org.apache.spark" % "spark-streaming_2.10" % "1.3.1" % "provided"
 )
