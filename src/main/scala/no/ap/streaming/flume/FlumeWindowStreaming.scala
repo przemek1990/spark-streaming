@@ -4,12 +4,18 @@ import com.typesafe.config.ConfigFactory
 import no.ap.streaming.event.ActivityStreamEvent
 import no.ap.streaming.event.ActivityStreamProtocol._
 import org.apache.spark.SparkConf
+import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.flume.FlumeUtils
-import org.apache.spark.streaming.{Seconds, Milliseconds, StreamingContext}
+import org.apache.spark.streaming.{Milliseconds, Seconds, StreamingContext}
 import spray.json._
 
 
 object FlumeWindowStreaming {
+
+  def updateEvenTypeSum(value: Seq[Int], state: Option[Int]) = {
+    Some(state.getOrElse(0) + value.size)
+  }
+
   def main(args: Array[String]) {
     //10seconds batch interval
     val batchInterval = Milliseconds(10000)
@@ -23,13 +29,16 @@ object FlumeWindowStreaming {
     // Create a flume stream
     val events = FlumeUtils.createPollingStream(ssc, conf.getString("flume.sink.host"), conf.getInt("flume.sink.port"))
     //last 3 batches
-    val eventWindows = events.window(Seconds(30),Seconds(10))
-    // Print out the count of events received from this server in each batch
-    eventWindows.count().map(cnt => "Received " + cnt + " flume events.").print()
 
-    eventWindows.flatMap(event => {
+    val dStream: DStream[(String, Int)] = events.flatMap(event => {
       new String(event.event.getBody().array(), "UTF-8").parseJson.convertTo[List[ActivityStreamEvent]]
-    }).map(rootEvent => (rootEvent.eventType, 1)).reduceByKey((x, y) => x + y).print()
+    }).map(rootEvent => (rootEvent.eventType, 1))
+
+    dStream.cache()
+
+    dStream.reduceByKeyAndWindow({ (x, y) => x + y}, { (x, y) => x - y}, Seconds(30), Seconds(10)).print()
+
+    dStream.updateStateByKey(updateEvenTypeSum).print()
 
     ssc.start()
     ssc.awaitTermination()
