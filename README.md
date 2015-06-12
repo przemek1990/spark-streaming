@@ -17,7 +17,7 @@ Configure your app with below property:
     aws.secret.key=AWS_SECRET_KEY
     aws.access.key=AWS_ACCESS_KEY
 
-You can the most convenient method for you:
+You can choose the most convenient method for you:
 
     system properties
     application.conf (all resources on classpath with this name)
